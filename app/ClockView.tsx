@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import GoHomeAnimation from "./GoHomeAnimation";
+import { messages, Lang } from "./messages";
 
 const CX = 275;
 const CY = 275;
@@ -47,6 +48,8 @@ export default function ClockView() {
   const [durationMin, setDurationMin] = useState<number | null>(null);
   const [finished, setFinished] = useState(false);
   const [showPanel, setShowPanel] = useState(false);
+  const [lang, setLang] = useState<Lang>("ja");
+  const t = messages[lang];
 
   /* マウント時に即設定＋毎秒更新 */
   useEffect(() => {
@@ -113,7 +116,7 @@ export default function ClockView() {
   const timerActive = startTime !== null && endTime !== null;
 
   if (finished) {
-    return <GoHomeAnimation onReset={handleReset} />;
+    return <GoHomeAnimation onReset={handleReset} lang={lang} />;
   }
 
   return (
@@ -349,10 +352,10 @@ export default function ClockView() {
             color: "#333",
           }}
         >
-          <div>スタート {fmt(startTime)}</div>
-          <div>おしまい {fmt(endTime)}</div>
+          <div>{t.start} {fmt(startTime)}</div>
+          <div>{t.end} {fmt(endTime)}</div>
           <div style={{ color: "#FF4757", fontWeight: 800 }}>
-            {durationMin}分間
+            {durationMin}{t.duration}
           </div>
         </div>
       )}
@@ -397,6 +400,26 @@ export default function ClockView() {
             color: "#333",
           }}
         >
+          <div style={{ display: "flex", gap: 6, marginBottom: 10 }}>
+            {(["ja", "en", "zh", "ko"] as Lang[]).map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                style={{
+                  flex: 1,
+                  padding: "4px 0",
+                  borderRadius: 6,
+                  border: lang === l ? "2px solid #1E90FF" : "1px solid #ccc",
+                  background: lang === l ? "#E8F4FF" : "#fff",
+                  fontWeight: lang === l ? 700 : 400,
+                  cursor: "pointer",
+                  fontSize: 12,
+                }}
+              >
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
           <select
             value=""
             onChange={(e) => {
@@ -412,10 +435,10 @@ export default function ClockView() {
               fontSize: 14,
             }}
           >
-            <option value="">何分後にする？</option>
+            <option value="">{t.placeholder}</option>
             {Array.from({ length: 59 }, (_, i) => i + 1).map((m) => (
               <option key={m} value={m}>
-                {m}分
+                {m}{t.minute}
               </option>
             ))}
           </select>
@@ -436,7 +459,7 @@ export default function ClockView() {
                 fontSize: 14,
               }}
             >
-              取り消し
+              {t.cancel}
             </button>
           )}
         </div>

@@ -1,7 +1,10 @@
 "use client";
 
+import { messages, Lang } from "./messages";
+
 type Props = {
   onReset?: () => void;
+  lang?: Lang;
 };
 
 /**
@@ -162,7 +165,8 @@ function HouseSvg({ size = 120 }: { size?: number }) {
   );
 }
 
-export default function GoHomeAnimation({ onReset }: Props) {
+export default function GoHomeAnimation({ onReset, lang = "ja" }: Props) {
+  const t = messages[lang];
   return (
     <div
       style={{
@@ -201,7 +205,7 @@ export default function GoHomeAnimation({ onReset }: Props) {
           textShadow: "0 2px 12px rgba(0,0,0,0.15)",
         }}
       >
-        おしまい
+        {t.finished}
       </div>
 
       {/* ===== 家（右側ゴール） ===== */}
@@ -263,7 +267,7 @@ export default function GoHomeAnimation({ onReset }: Props) {
             backdropFilter: "blur(4px)",
           }}
         >
-          もどる
+          {t.goBack}
         </button>
       )}
     </div>
